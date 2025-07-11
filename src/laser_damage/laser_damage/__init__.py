@@ -5,15 +5,11 @@
 """
 
 from .simulator import LaserDamageSimulator
-from .laser_config import LaserConfiguration
-from .material_config import MaterialConfiguration
 from .thermal_solver import ThermalSolver
 from .stress_solver import StressSolver
 
 __all__ = [
     "LaserDamageSimulator",
-    "LaserConfiguration", 
-    "MaterialConfiguration",
     "ThermalSolver",
     "StressSolver",
 ]

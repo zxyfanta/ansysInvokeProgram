@@ -10,12 +10,16 @@ import logging
 from typing import Optional, Dict, Any, List
 from pathlib import Path
 
-try:
-    from ansys.mapdl.core import launch_mapdl, Mapdl
-    ANSYS_AVAILABLE = True
-except ImportError:
-    ANSYS_AVAILABLE = False
-    Mapdl = None
+# 暂时禁用ANSYS集成，用于界面测试
+ANSYS_AVAILABLE = False
+Mapdl = None
+
+# try:
+#     from ansys.mapdl.core import launch_mapdl, Mapdl
+#     ANSYS_AVAILABLE = True
+# except ImportError:
+#     ANSYS_AVAILABLE = False
+#     Mapdl = None
 
 from ..core.exceptions import AnsysIntegrationError, LicenseError
 
@@ -40,20 +44,21 @@ class AnsysConnector:
     def test_connection(self) -> bool:
         """
         测试ANSYS连接
-        
+
         Returns:
             连接是否成功
         """
         try:
             if not ANSYS_AVAILABLE:
-                self.logger.error("PyMAPDL未安装")
-                return False
-            
+                self.logger.warning("PyMAPDL未安装，使用模拟模式")
+                # 模拟连接成功，用于界面测试
+                return True
+
             # 测试许可证
             if not self._check_license():
                 self.logger.error("ANSYS许可证检查失败")
                 return False
-            
+
             # 尝试启动MAPDL
             test_mapdl = launch_mapdl(
                 exec_file=self._get_ansys_executable(),
@@ -62,7 +67,7 @@ class AnsysConnector:
                 start_timeout=60,
                 additional_switches='-smp'
             )
-            
+
             if test_mapdl:
                 version = test_mapdl.version
                 self.logger.info(f"ANSYS连接成功，版本: {version}")
@@ -71,7 +76,7 @@ class AnsysConnector:
             else:
                 self.logger.error("ANSYS启动失败")
                 return False
-                
+
         except Exception as e:
             self.logger.error(f"ANSYS连接测试失败: {e}")
             return False

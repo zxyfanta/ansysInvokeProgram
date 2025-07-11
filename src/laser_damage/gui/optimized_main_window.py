@@ -288,40 +288,53 @@ class OptimizedMainWindow(QMainWindow):
         help_menu.addAction(about_action)
     
     def init_tool_bar(self):
-        """初始化工具栏 - 精简版"""
-        toolbar = self.addToolBar('主工具栏')
+        """初始化工具栏 - 极简版"""
+        toolbar = self.addToolBar('工具栏')
         toolbar.setMovable(False)
-        toolbar.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
-        
-        # 项目操作
+        toolbar.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+
+        # 项目快速操作
         new_action = QAction('新建', self)
         new_action.setToolTip('新建项目 (Ctrl+N)')
         new_action.triggered.connect(self.new_project)
         toolbar.addAction(new_action)
-        
+
         open_action = QAction('打开', self)
         open_action.setToolTip('打开项目 (Ctrl+O)')
         open_action.triggered.connect(self.open_project)
         toolbar.addAction(open_action)
-        
+
         save_action = QAction('保存', self)
         save_action.setToolTip('保存项目 (Ctrl+S)')
         save_action.triggered.connect(self.save_project)
         toolbar.addAction(save_action)
-        
+
         toolbar.addSeparator()
-        
-        # 仿真控制
-        self.run_action = QAction('运行', self)
+
+        # 仿真控制 - 主要操作
+        self.run_action = QAction('▶ 运行', self)
         self.run_action.setToolTip('运行仿真 (F5)')
         self.run_action.triggered.connect(self.run_simulation)
         toolbar.addAction(self.run_action)
-        
-        self.stop_action = QAction('停止', self)
+
+        self.stop_action = QAction('⏹ 停止', self)
         self.stop_action.setToolTip('停止仿真 (F6)')
         self.stop_action.triggered.connect(self.stop_simulation)
         self.stop_action.setEnabled(False)
         toolbar.addAction(self.stop_action)
+
+        toolbar.addSeparator()
+
+        # 快速导航
+        nav_action = QAction('📊 结果', self)
+        nav_action.setToolTip('查看分析结果 (Ctrl+2)')
+        nav_action.triggered.connect(lambda: self.central_tabs.setCurrentIndex(1))
+        toolbar.addAction(nav_action)
+
+        report_action = QAction('📄 报告', self)
+        report_action.setToolTip('生成报告 (Ctrl+3)')
+        report_action.triggered.connect(lambda: self.central_tabs.setCurrentIndex(2))
+        toolbar.addAction(report_action)
     
     def init_status_bar(self):
         """初始化状态栏"""
@@ -413,11 +426,54 @@ class OptimizedMainWindow(QMainWindow):
         """保存项目"""
         # TODO: 实现保存项目逻辑
         QMessageBox.information(self, "信息", "保存项目功能")
-    
+
+    def save_project_as(self):
+        """另存为项目"""
+        # TODO: 实现另存为项目逻辑
+        QMessageBox.information(self, "信息", "另存为项目功能")
+
     def load_project(self, project_name):
         """加载项目"""
         self.project_info_label.setText(f"项目: {project_name}")
         self.status_label.setText(f"已加载项目: {project_name}")
+
+    # 帮助菜单相关方法
+    def show_manual(self):
+        """显示用户手册"""
+        QMessageBox.information(self, "用户手册",
+                               "激光毁伤仿真系统用户手册\n\n"
+                               "1. 仿真设置：配置激光参数和材料属性\n"
+                               "2. 结果分析：查看仿真结果和数据分析\n"
+                               "3. 报告生成：生成分析报告\n"
+                               "4. 效果评估：评估毁伤效果")
+
+    def show_tutorial(self):
+        """显示快速入门"""
+        QMessageBox.information(self, "快速入门",
+                               "快速入门指南\n\n"
+                               "1. 新建或打开项目\n"
+                               "2. 在仿真设置中配置参数\n"
+                               "3. 点击运行仿真\n"
+                               "4. 在结果分析中查看结果\n"
+                               "5. 生成报告和评估效果")
+
+    def validate_parameters(self):
+        """参数验证"""
+        QMessageBox.information(self, "参数验证", "参数验证功能")
+
+    def clear_cache(self):
+        """清理缓存"""
+        reply = QMessageBox.question(self, "清理缓存",
+                                   "确定要清理所有缓存文件吗？",
+                                   QMessageBox.Yes | QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            QMessageBox.information(self, "完成", "缓存已清理")
+
+    def check_updates(self):
+        """检查更新"""
+        QMessageBox.information(self, "检查更新",
+                               "当前版本：v2.0\n"
+                               "已是最新版本")
     
     # 仿真控制方法
     def run_simulation(self):

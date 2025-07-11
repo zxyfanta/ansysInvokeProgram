@@ -9,11 +9,13 @@ from .simulation_panel import SimulationPanel
 from .analysis_panel import AnalysisPanel
 from .report_panel import ReportPanel
 from .assessment_panel import AssessmentPanel
+from .project_selector import ProjectSelector
 
 __all__ = [
     "LaserSimulationMainWindow",
     "SimulationPanel",
-    "AnalysisPanel", 
+    "AnalysisPanel",
     "ReportPanel",
     "AssessmentPanel",
+    "ProjectSelector",
 ]

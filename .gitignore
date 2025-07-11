@@ -1,18 +1,4 @@
-# 激光毁伤仿真系统 .gitignore
-
-# ============================================================================
-# Python 虚拟环境 (不纳入版本控制)
-# ============================================================================
-laser_simulation_env/
-venv/
-env/
-ENV/
-.venv/
-.env/
-
-# ============================================================================
-# Python 编译文件和缓存
-# ============================================================================
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -30,286 +16,33 @@ parts/
 sdist/
 var/
 wheels/
-share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
-# ============================================================================
-# PyInstaller 打包文件
-# ============================================================================
-*.manifest
-*.spec
+# Virtual Environment
+laser_simulation_env/
+venv/
+env/
+ENV/
 
-# ============================================================================
-# 单元测试和覆盖率报告
-# ============================================================================
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-cover/
-
-# ============================================================================
-# Jupyter Notebook
-# ============================================================================
-.ipynb_checkpoints
-
-# ============================================================================
-# IPython
-# ============================================================================
-profile_default/
-ipython_config.py
-
-# ============================================================================
-# 环境变量文件
-# ============================================================================
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# ============================================================================
-# PyCharm IDE
-# ============================================================================
+# IDE
+.vscode/
 .idea/
 *.swp
 *.swo
 
-# ============================================================================
-# VS Code IDE
-# ============================================================================
-.vscode/
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.code-workspace
-
-# ============================================================================
-# Sublime Text
-# ============================================================================
-*.sublime-project
-*.sublime-workspace
-
-# ============================================================================
-# 系统文件
-# ============================================================================
-# macOS
+# OS
 .DS_Store
-.AppleDouble
-.LSOverride
-Icon
-._*
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-# Windows
 Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
-*.stackdump
-[Dd]esktop.ini
-$RECYCLE.BIN/
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-*.lnk
 
-# Linux
-*~
-
-# ============================================================================
-# 项目特定文件
-# ============================================================================
-
-# 仿真结果数据 (大文件不纳入版本控制)
+# Project specific
 data/results/
-data/cache/
-data/temp/
-*.h5
-*.hdf5
-*.nc
-*.vtk
-*.vtu
-*.vtp
-
-# 模型文件 (通常较大)
-data/models/*.step
-data/models/*.stp
-data/models/*.iges
-data/models/*.igs
-data/models/*.sat
-data/models/*.x_t
-data/models/*.x_b
-data/models/*.stl
-
-# 生成的报告文件
-reports/generated/
-*.pdf
-*.docx
-*.html
-
-# 日志文件
-logs/
 *.log
-*.log.*
-
-# 临时文件
-tmp/
-temp/
 *.tmp
-*.temp
-*.bak
-*.backup
-
-# 配置文件中的敏感信息
 config/local_settings.py
-config/secrets.py
-config/*.key
-config/*.pem
 
-# ============================================================================
-# ANSYS 相关文件
-# ============================================================================
-# ANSYS 工作目录
-ansys_workdir/
+# ANSYS files
 *.db
 *.rst
 *.rth
-*.rmg
-*.rfl
-*.esav
-*.full
-*.mode
-*.err
-*.out
-*.log
-*.mntr
-*.page
-*.stat
-
-# ANSYS 许可证文件
-*.lic
-license.dat
-
-# ============================================================================
-# 科学计算和可视化
-# ============================================================================
-# Matplotlib 缓存
-.matplotlib/
-
-# NumPy 数据文件
-*.npy
-*.npz
-
-# Pandas 数据文件
-*.pkl
-*.pickle
-
-# 大型数据集
-*.csv
-!data/templates/*.csv
-!tests/fixtures/*.csv
-
-# ============================================================================
-# 文档生成
-# ============================================================================
-docs/_build/
-docs/build/
-site/
-
-# Sphinx 文档
-docs/_build/
-docs/_static/
-docs/_templates/
-
-# ============================================================================
-# 部署相关
-# ============================================================================
-# Docker
-.dockerignore
-Dockerfile.local
-docker-compose.override.yml
-
-# Kubernetes
-k8s/secrets/
-*.secret.yaml
-
-# 部署脚本中的敏感信息
-deployment/secrets/
-deployment/*.key
-deployment/*.pem
-
-# ============================================================================
-# 性能分析
-# ============================================================================
-*.prof
-*.pstats
-
-# ============================================================================
-# 数据库
-# ============================================================================
-*.db
-*.sqlite
-*.sqlite3
-
-# ============================================================================
-# 其他工具
-# ============================================================================
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# pytype static type analyzer
-.pytype/
-
-# Cython debug symbols
-cython_debug/
-
-# ============================================================================
-# 项目特定的忽略文件
-# ============================================================================
-# 用户自定义配置
-user_config.py
-local_settings.py
-
-# 开发时的测试文件
-test_*.py
-!tests/test_*.py
-
-# 临时脚本
-scratch/
-playground/
-experiments/
-
-# 性能测试结果
-benchmarks/results/
-profiling/
-
-# 第三方工具生成的文件
-.coverage
-.pytest_cache/
-.tox/

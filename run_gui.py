@@ -14,17 +14,34 @@ src_path = Path(__file__).parent / "src"
 sys.path.insert(0, str(src_path))
 
 try:
-    from laser_damage.gui.main_window import main
-    
-    if __name__ == '__main__':
+    # 检查是否使用优化版本
+    import argparse
+    parser = argparse.ArgumentParser(description='激光毁伤仿真系统')
+    parser.add_argument('--optimized', action='store_true', help='使用优化版本GUI')
+    args = parser.parse_args()
+
+    if args.optimized:
+        from laser_damage.gui.optimized_main_window import main
+        print("正在启动激光毁伤仿真系统 (优化版本)...")
+    else:
+        from laser_damage.gui.main_window import main
         print("正在启动激光毁伤仿真系统...")
+
+    if __name__ == '__main__':
         print("请确保已安装所需的依赖库：")
         print("- PyQt5")
         print("- matplotlib")
         print("- numpy")
         print("- pandas")
         print()
-        
+
+        if args.optimized:
+            print("🚀 使用优化版本GUI界面")
+            print("   - 简化的菜单结构")
+            print("   - 集成的项目资源管理器")
+            print("   - 改进的工作流程")
+        print()
+
         main()
         
 except ImportError as e:

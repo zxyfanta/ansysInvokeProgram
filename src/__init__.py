@@ -13,14 +13,14 @@ from .core import BaseSimulator, SimulationData
 from .laser_damage import LaserDamageSimulator
 from .post_damage import PostDamageAnalyzer
 from .data_analysis import DataAnalyzer, ReportGenerator
-from .damage_assessment import DamageAssessment
+from .damage_assessment import DamageAssessor
 
 __all__ = [
     'BaseSimulator',
     'SimulationData',
     'LaserDamageSimulator',
-    'PostDamageAnalyzer', 
+    'PostDamageAnalyzer',
     'DataAnalyzer',
     'ReportGenerator',
-    'DamageAssessment'
+    'DamageAssessor'
 ]

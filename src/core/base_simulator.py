@@ -248,7 +248,11 @@ class BaseSimulator(ABC):
     def log_error(self, message: str):
         """记录错误日志"""
         self.logger.error(message)
-    
+
+    def get_current_time(self) -> str:
+        """获取当前时间字符串"""
+        return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     def __enter__(self):
         """上下文管理器入口"""
         return self

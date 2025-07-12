@@ -32,6 +32,7 @@ if PYQT5_AVAILABLE:
     from .simulation_control_panel import SimulationControlPanel
     from .results_viewer import ResultsViewer
     from .chart_viewer import ChartViewer
+    from .aircraft_modeling_dialog import AircraftModelingDialog
 
 # 导入核心模块
 from core.data_models import LaserParameters, MaterialData, GeometryData, LaserType
@@ -313,7 +314,14 @@ class MainWindow(QMainWindow):
         
         # 工具菜单
         tools_menu = menubar.addMenu('工具(&T)')
-        
+
+        # 飞行器建模
+        aircraft_modeling_action = QAction('飞行器建模(&A)', self)
+        aircraft_modeling_action.triggered.connect(self.show_aircraft_modeling)
+        tools_menu.addAction(aircraft_modeling_action)
+
+        tools_menu.addSeparator()
+
         settings_action = QAction('设置(&S)', self)
         settings_action.triggered.connect(self.show_settings)
         tools_menu.addAction(settings_action)
@@ -347,7 +355,14 @@ class MainWindow(QMainWindow):
         toolbar.addAction(save_action)
         
         toolbar.addSeparator()
-        
+
+        # 飞行器建模
+        aircraft_action = QAction("飞行器建模", self)
+        aircraft_action.triggered.connect(self.show_aircraft_modeling)
+        toolbar.addAction(aircraft_action)
+
+        toolbar.addSeparator()
+
         # 开始仿真
         self.start_action = QAction("开始仿真", self)
         self.start_action.triggered.connect(self.start_simulation)
@@ -814,6 +829,56 @@ class MainWindow(QMainWindow):
 
         except Exception as e:
             self.show_error(f"导出结果失败: {e}")
+
+    def show_aircraft_modeling(self):
+        """显示飞行器建模对话框"""
+        try:
+            dialog = AircraftModelingDialog(self)
+
+            # 连接信号
+            dialog.model_generated.connect(self.on_aircraft_model_generated)
+            dialog.model_imported.connect(self.on_aircraft_model_imported)
+
+            dialog.exec_()
+
+        except Exception as e:
+            self.show_error(f"打开飞行器建模对话框失败: {e}")
+
+    def on_aircraft_model_generated(self, model_data: dict):
+        """处理飞行器模型生成完成"""
+        try:
+            # 更新当前项目的飞行器模型
+            if hasattr(self, 'current_project_data'):
+                self.current_project_data['aircraft_model'] = model_data
+
+            # 更新状态
+            self.status_bar.showMessage(f"飞行器模型已生成: {model_data.get('metadata', {}).get('name', 'Unknown')}")
+
+            # 更新配置状态
+            self.update_config_status()
+
+            self.show_info("飞行器模型生成完成！")
+
+        except Exception as e:
+            self.show_error(f"处理飞行器模型失败: {e}")
+
+    def on_aircraft_model_imported(self, model_data: dict):
+        """处理飞行器模型导入完成"""
+        try:
+            # 更新当前项目的飞行器模型
+            if hasattr(self, 'current_project_data'):
+                self.current_project_data['aircraft_model'] = model_data
+
+            # 更新状态
+            self.status_bar.showMessage(f"飞行器模型已导入: {model_data.get('metadata', {}).get('name', 'Unknown')}")
+
+            # 更新配置状态
+            self.update_config_status()
+
+            self.show_info("飞行器模型导入完成！")
+
+        except Exception as e:
+            self.show_error(f"处理飞行器模型失败: {e}")
 
     def show_settings(self):
         """显示设置对话框"""

@@ -16,12 +16,12 @@ project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
 # 导入配置
-from config import get_system_config, get_ansys_config, setup_ansys_environment
+from config.settings import get_system_config
+from config.ansys_config import get_ansys_config, setup_ansys_environment
 
 # 导入核心模块
-from src.laser_damage import LaserDamageSimulator
 from src.core.data_models import (
-    LaserParameters, MaterialData, GeometryData, 
+    LaserParameters, MaterialData, GeometryData,
     BoundaryConditions, SimulationSettings, LaserType
 )
 
@@ -124,42 +124,30 @@ def create_sample_simulation():
 def run_cli_simulation():
     """运行命令行仿真"""
     logger = logging.getLogger(__name__)
-    
+
     try:
         logger.info("开始激光毁伤仿真...")
-        
-        # 创建仿真器
-        simulator = LaserDamageSimulator()
-        
-        # 创建示例仿真数据
-        sim_params = create_sample_simulation()
-        simulation_data = simulator.create_simulation(
-            name="示例激光毁伤仿真",
-            description="铝合金目标的激光毁伤仿真",
-            **sim_params
-        )
-        
-        # 运行仿真
-        success = simulator.start_simulation(simulation_data)
-        
-        if success:
+
+        # 使用新的激光毁伤分析程序
+        print("🚀 启动激光毁伤效能分析软件...")
+
+        # 运行新的主程序
+        import subprocess
+        import sys
+
+        result = subprocess.run([
+            sys.executable, "laser_damage_analysis.py", "--cli"
+        ], capture_output=True, text=True)
+
+        if result.returncode == 0:
             logger.info("仿真完成成功")
-            
-            # 获取结果
-            results = simulator.get_results()
-            logger.info(f"仿真结果: {results}")
-            
-            # 保存结果
-            output_dir = "results"
-            simulator.export_results(output_dir)
-            logger.info(f"结果已保存到: {output_dir}")
-            
+            print(result.stdout)
+            return True
         else:
             logger.error("仿真失败")
+            print(result.stderr)
             return False
-        
-        return True
-        
+
     except Exception as e:
         logger.error(f"仿真执行异常: {e}")
         return False
@@ -167,24 +155,24 @@ def run_cli_simulation():
 def run_gui():
     """启动GUI界面"""
     try:
-        from src.gui import AircraftModelingGUI, GUI_AVAILABLE
-        
+        from src.gui.main_window import MainWindow, GUI_AVAILABLE
+
         if not GUI_AVAILABLE:
             print("GUI模块不可用，请检查PyQt5安装")
             return False
-        
+
         from PyQt5.QtWidgets import QApplication
-        
+
         app = QApplication(sys.argv)
         app.setApplicationName("激光毁伤效能分析软件")
         app.setApplicationVersion("1.0.0")
-        
+
         # 创建主窗口
-        window = AircraftModelingGUI()
+        window = MainWindow()
         window.show()
-        
+
         return app.exec_()
-        
+
     except ImportError as e:
         print(f"GUI启动失败: {e}")
         print("请安装PyQt5: pip install PyQt5")

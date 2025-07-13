@@ -244,6 +244,9 @@ class AircraftModelingDialog(QDialog):
         
         self.browse_btn = QPushButton("浏览...")
         file_layout.addWidget(self.browse_btn, 0, 2)
+
+        self.preview_file_btn = QPushButton("预览文件")
+        file_layout.addWidget(self.preview_file_btn, 0, 3)
         
         file_layout.addWidget(QLabel("文件格式:"), 1, 0)
         self.file_format_combo = QComboBox()
@@ -331,6 +334,7 @@ class AircraftModelingDialog(QDialog):
         
         # 导入选项卡连接
         self.browse_btn.clicked.connect(self.browse_file)
+        self.preview_file_btn.clicked.connect(self.preview_file)
         
         # 管理选项卡连接
         self.refresh_btn.clicked.connect(self.refresh_model_list)
@@ -507,9 +511,72 @@ class AircraftModelingDialog(QDialog):
         if not self.generated_model:
             QMessageBox.warning(self, "警告", "没有可预览的模型")
             return
-        
-        # 这里可以实现3D预览功能
-        QMessageBox.information(self, "预览", "3D预览功能正在开发中...")
+
+        try:
+            from .model_preview_dialog import show_model_preview
+            show_model_preview(
+                parent=self,
+                model_data=self.generated_model,
+                aircraft_generator=self.aircraft_generator,
+                title="生成的飞行器模型"
+            )
+        except Exception as e:
+            QMessageBox.critical(self, "错误", f"预览失败: {e}")
+
+    def preview_file(self):
+        """预览选择的文件"""
+        file_path = self.file_path_edit.text()
+        if not file_path:
+            QMessageBox.warning(self, "警告", "请先选择模型文件")
+            return
+
+        if not Path(file_path).exists():
+            QMessageBox.warning(self, "警告", "文件不存在")
+            return
+
+        try:
+            print(f"🔍 开始预览文件: {file_path}")
+
+            # 首先加载模型数据
+            from .model_loader import ModelLoader
+            model_data = ModelLoader.load_model_file(file_path)
+
+            if not model_data:
+                QMessageBox.warning(self, "警告", "无法加载模型文件")
+                return
+
+            print(f"✅ 模型文件加载成功: {model_data.get('triangle_count', 0)} 个三角形")
+
+            # 尝试使用完整版预览器
+            try:
+                from .model_preview_dialog import show_model_preview
+                show_model_preview(
+                    parent=self,
+                    model_data=model_data,
+                    title=f"文件预览: {Path(file_path).name}"
+                )
+                print("✅ 使用完整版预览器")
+
+            except Exception as e:
+                print(f"⚠️ 完整版预览器失败: {e}")
+
+                # 使用简化版预览器
+                try:
+                    from .simple_model_viewer import show_simple_model_preview
+                    show_simple_model_preview(
+                        parent=self,
+                        model_data=model_data,
+                        title=f"文件预览: {Path(file_path).name}"
+                    )
+                    print("✅ 使用简化版预览器")
+
+                except Exception as e2:
+                    print(f"❌ 简化版预览器也失败: {e2}")
+                    QMessageBox.critical(self, "错误", f"预览功能不可用: {e2}")
+
+        except Exception as e:
+            print(f"❌ 文件预览失败: {e}")
+            QMessageBox.critical(self, "错误", f"文件预览失败: {e}")
     
     def export_model(self):
         """导出模型"""
